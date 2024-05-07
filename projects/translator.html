@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Language Translator </title>
+
+<style type="text/css">
+  *{
+    box-sizing: border-box;
+  }
+  .container{
+    width:100%;
+    height:100vh;
+    background:rgba(11,12,96,0.456);
+  }
+  .container1{
+    width:60%;
+    height:64%;
+    background: lightskyblue;
+    position:absolute;
+    left:20%;
+    top:17%;
+    border-radius:6px;
+
+  }
+  #writingarea{
+    width:400px;
+    height:300px;
+    position:relative;
+    padding:20px;
+    left:40px;
+    border:4px solid cyan;
+    outline:none;
+    border-radius:6px;
+    font-size: 1rem;
+  }
+  #outputarea{
+    width:400px;
+    height:300px;
+    background: white;
+    padding:20px;
+    position:absolute;
+    left:446px;
+    bottom:96px;
+    border:4px solid cyan;
+    border-radius:6px;
+    font-size: 1rem;
+    word-break: break-all;
+  }
+  .heading{
+    font-family: sans-serif;
+    color:green;
+    text-align: center;
+    letter-spacing: 3px;
+    text-decoration: underline;
+  }
+  .heading::first-letter{
+    color:red;
+  }
+  
+
+  #inputlang{
+    width:400px;
+    height:20px;
+    position:relative;
+    left:40px;
+    text-align: center;
+    background: cyan;
+    font-size: 1rem;
+    
+
+  }
+  #outputlang{
+    width:400px;
+    height:20px;
+    position:relative;
+    top:24px;
+    left:40px;
+    text-align: center;
+    background: cyan;
+    font-size: 1rem;
+    
+  }
+  #inputlang:hover{
+    background: black;
+    color:red;
+  }
+  #outputlang:hover{
+    background: black;
+    color:red;
+  }
+  #translatebtn{
+    padding:4px 4px;
+    width:400px;
+    position:relative;
+    left:40px;
+    top:37px;
+    background:seagreen;
+    color:cyan;
+    font-size: 1rem;
+    cursor:pointer;
+  
+    
+  }
+  #spkbtn{
+    padding:4px 4px;
+    width:400px;
+    position:relative;
+    left:40px;
+    top:7px;
+    background: seagreen;
+    color:cyan;
+    font-size: 1rem;
+    cursor:pointer;
+  }
+  #translatebtn:active{
+    background: rgba(12, 54, 87, 1.0);
+  }
+  #spkbtn:active{
+    background: rgba(10, 20, 56, 1.0);
+  }
+
+
+
+</style>
+
+</head>
+
+
+<body>
+ <div class="container">
+  <div class="container1">
+    <h1 class="heading">Language Translator WebApp</h1>
+    <textarea id="writingarea"></textarea>
+    <div id="outputarea"></div>
+    <select id="outputlang">
+      <option>Choose Language</option>
+    </select>
+    <select id="inputlang">
+      <option>Choose Language</option>
+    </select>
+    <button id="translatebtn">Translate</button>
+    <button id="spkbtn">Speak</button>
+  </div>
+</div>
+ 
+ <script type="text/javascript">
+   var writingarea=document.querySelector("#writingarea");
+  var outputarea=document.querySelector("#outputarea");
+  var inputlang=document.querySelector("#inputlang");
+  var outputlang=document.querySelector("#outputlang");
+  var translatebtn=document.querySelector("#translatebtn").addEventListener("click",translate);
+  var spkbtn=document.querySelector("#spkbtn").addEventListener("click",speak)
+ 
+
+
+  const languages=[
+  {name:"Malayalam",code:"ml-IN"},{name:"English",code:"en-US"},{name:"Hindi",code:"hi-IN"},{name:"Tamil",code:"ta-IN"},{name:"Arabic",code:"ar-XA"},{name:"Chinese",code:"yue-HK"},{name:"Danish",code:"da-DK"},
+    {name:"French",code:"fr-CA"},{name:"German",code:"de-DE"},{name:"Japanese",code:"ja-JP"},
+    {name:"Korean",code:"ko-KR"},{name:"spanish",code:"es-US"},{name:"Telungu",code:"te-IN"}
+    ]
+    
+  
+  
+
+ 
+
+  languages.forEach((language)=>{
+
+    //Options for inputlang(choose writing language)
+    var options1=document.createElement("option");
+    options1.text=language.name;
+    options1.value=language.code;
+    inputlang.appendChild(options1);
+
+    //Options for outputlang(choose converting language)
+    var options2=document.createElement('option');
+    options2.text=language.name;
+    options2.value=language.code;
+    outputlang.appendChild(options2);
+
+  })
+  var writinglanguage
+  var convertinglanguage
+   inputlang.addEventListener("change",()=>{
+    writinglanguage=inputlang.value;
+  })
+  outputlang.addEventListener("change",()=>{
+    convertinglanguage=outputlang.value;
+  })
+  
+ var speaktext
+
+        function translate(){
+           var text=writingarea.value;
+     var api=`https://api.mymemory.translated.net/get?q=${text}&langpair=${writinglanguage}|${convertinglanguage}`
+    fetch(api).then((response)=>response.json()).then((data)=>{
+      outputarea.innerHTML=data.responseData.translatedText;
+      speaktext=data.responseData.translatedText
+  
+    }).catch((error)=>{
+      outputarea.innerHTML="Error Occured"
+    });
+
+}
+
+ function speak(){
+  var speech=new SpeechSynthesisUtterance();
+  speech.text=speaktext;
+  speech.lang=convertinglanguage;
+  window.speechSynthesis.speak(speech);
+ }
+
+
+
+
+
+
+
+ </script>
+
+
+
+  </body>
+</html>
