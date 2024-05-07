@@ -1,5 +1,5 @@
 // Login form validation and send a webpage[html file] as response
-//install node and express in your pc 
+//please install node and express in your pc to use this
 const express=require("express");
 const app=express();
 app.use(express.static("path"));
